@@ -78,7 +78,7 @@ func init() {
 	flag.StringVar(&shipyardURL, "url", "", "Shipyard URL")
 	flag.StringVar(&shipyardKey, "key", "", "Shipyard Agent Key")
 	flag.IntVar(&runInterval, "interval", 5, "Run interval (seconds)")
-	flag.StringVar(&apiVersion, "api-version", "v1.9", "Docker API Version to use")
+	flag.StringVar(&apiVersion, "api-version", "v1.12", "Docker API Version to use")
 	flag.BoolVar(&registerAgent, "register", false, "Register Agent with Shipyard")
 	flag.BoolVar(&version, "version", false, "Shows Agent Version")
 	flag.StringVar(&address, "address", "0.0.0.0", "Agent Listen Address (default: 0.0.0.0)")
@@ -142,7 +142,8 @@ func getContainers() []APIContainer {
 	if resp.StatusCode == http.StatusOK {
 		d := json.NewDecoder(resp.Body)
 		if err = d.Decode(&containers); err != nil {
-			log.Fatalf("Error parsing container JSON from Docker: %s", err)
+			log.Fatalf("(1) Error parsing container JSON from Docker: %s", err)
+			log.Fatal(err)
 		}
 	}
 	resp.Body.Close()
@@ -165,14 +166,15 @@ func inspectContainer(id string) *Container {
 		log.Fatalf("Error inspecting container from Docker: %s", err)
 	}
 
+	defer resp.Body.Close()
+
 	var container *Container
 	if resp.StatusCode == http.StatusOK {
 		d := json.NewDecoder(resp.Body)
 		if err = d.Decode(&container); err != nil {
-			log.Fatalf("Error parsing container JSON: %s", err)
+			log.Fatalf("(2) Error parsing container JSON: %s", err)
 		}
 	}
-	resp.Body.Close()
 	return container
 }
 
@@ -318,6 +320,10 @@ func main() {
 		register()
 		os.Exit(0)
 	}
+
+	fmt.Println("api-version", apiVersion)
+	fmt.Println("key", shipyardKey)
+	fmt.Println("interval", runInterval)
 
 	log.Printf("Shipyard Agent (%s)\n", shipyardURL)
 	log.Printf("Listening on %s:%d", address, port)

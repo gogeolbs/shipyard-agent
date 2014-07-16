@@ -68,6 +68,7 @@ type (
 	Container struct {
 		Id              string
 		Args            []string
+		Name            string
 		Config          ContainerConfig
 		Created         time.Time
 		Driver          string
@@ -87,6 +88,7 @@ type (
 		AttachStdin     bool
 		AttachStdout    bool
 		Cmd             []string
+		Entrypoint      []string
 		CpuShares       int64
 		Dns             string
 		Domainname      string
@@ -94,9 +96,8 @@ type (
 		ExposedPorts    map[Port]struct{}
 		Hostname        string
 		Image           string
-		Memory          int64
-		MemorySwap      int64
-		Name            string
+		Memory          float64
+		MemorySwap      float64
 		NetworkDisabled bool
 		OnBuild         []string
 		OpenStdin       bool

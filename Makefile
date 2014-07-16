@@ -1,5 +1,5 @@
 all:
-	@cd ./agent && go build -o ../shipyard-agent
+	@cd ./agent && go build -o ../shipyard-agent && chmod +x ../shipyard-agent
 
 get:
 	@go get -d -v ./...
