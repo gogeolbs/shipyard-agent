@@ -90,6 +90,7 @@ type (
 		Cmd             []string
 		Entrypoint      []string
 		CpuShares       int64
+		Cpuset       		string
 		Dns             string
 		Domainname      string
 		Env             []string

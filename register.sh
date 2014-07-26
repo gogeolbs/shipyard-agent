@@ -1,10 +1,12 @@
 #!/bin/bash
 
-SHIPYARD_URL=http://192.168.88.117:8000
+IP=http://$(ifconfig docker0 | grep 'inet end' | awk '{print $3}')
 
 if [[ ! -z $1 ]]; then
-	SHIPYARD_URL=$1
+	IP=$1
 fi
+
+SHIPYARD_URL=$IP:8000
 
 if [[ $UID != 0 ]]; then
   echo "Please run this script with sudo:"
